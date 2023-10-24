@@ -7,31 +7,35 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".SignInActivity">
 
-    <TextView
-        android:id="@+id/Title"
+    <EditText
+        android:id="@+id/UserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="40dp"
-        android:text="缘深
-        点中点"
-        android:textSize="60sp" />
+        android:hint="用户名"
+        android:textSize="30sp"/>
+
+    <EditText
+        android:id="@+id/Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="密码"
+        android:textSize="30sp"/>
+
+    <EditText
+        android:id="@+id/passwordAgain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="确认密码"
+        android:textSize="30sp"/>
 
     <Button
-        android:id="@+id/JumpToLogin"
-        android:layout_width="match_parent"
+        android:id="@+id/SignIn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
+        android:padding="16dp"
         android:layout_marginTop="80dp"
-        android:text="登录" />
-    <Button
-        android:id="@+id/JumpToSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="注册" />
-
-
+        android:text="注册"
+        android:textSize="30sp"/>
 </LinearLayout>
