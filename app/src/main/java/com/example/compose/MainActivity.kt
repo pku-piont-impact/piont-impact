@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.compose.ui.theme.ComposeTheme
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.res.painterResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +34,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    Row {
+        Image(
+            painter = painterResource(R.drawable.pku),
+            contentDescription = "Contact profile picture",
+        )
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+    }
 }
 
 @Preview(showBackground = true)
