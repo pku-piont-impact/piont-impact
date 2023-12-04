@@ -1,3 +1,13 @@
+// Color.kt
+
+// use a default color palette from material3
+// https://developer.android.com/jetpack/compose/themes#color-palette
+// https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#color-palette
+
+
+
+
+
 package com.example.compose.ui.theme
 
 import androidx.compose.ui.graphics.Color
