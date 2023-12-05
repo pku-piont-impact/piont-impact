@@ -19,10 +19,22 @@ import androidx.compose.material3.Button
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -35,73 +47,149 @@ class MainActivity : ComponentActivity() {
 //        }
 
         setContent {
-            Greetings()
-
-//            ComposeTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    Greeting()
-//                }
-//            }
+            var stage by remember { mutableStateOf(false) }
+            val stageIncrement: () -> Unit = {
+                stage = true
+            }
+            ComposeTheme {
+                when (stage) {
+                    false -> SimpleImageCard(onClick = stageIncrement)
+                    true -> MainView()
+                }
+            }
         }
     }
 }
 
-@Preview
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(modifier: Modifier = Modifier) {
-    Column (modifier = modifier
-        .fillMaxWidth() // It will fill the maximum available width
-        .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "PIONT!",
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp) // Apply a top and bottom padding
-        )
+fun SimpleImageCard(padding: Dp = 8.dp, onClick: () -> Unit) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ElevatedCard(onClick = onClick) {
+            FrontPageImage(onClick = onClick)
+        }
+    }
+}
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "our blah blah blah ooo ooo ooo ooo ho ha ha crowd density ho ho ho ha!",
-            color = MaterialTheme.colorScheme.secondary,
-//            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp)
-//            style = MaterialTheme.typography.titleSmall
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
+@Composable
+fun FrontPageImage(onClick: () -> Unit = {}) {
+//    SquareClippedImage(painter = painterResource(R.drawable.pku), contentDescription = "pku", modifier = Modifier.clickable(onClick = onClick), size = 10.dp)
+    Box( // a square box that fills max width
+        modifier = Modifier
+            .aspectRatio(1f)
+    ) {
         Image(
             painter = painterResource(R.drawable.pku),
-            contentDescription = "Front page picture",
+            contentDescription = "pku",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-//                .size(128.dp) // Specify size for the image
-//                .clip(CircleShape) // Clip the image to a circle
-                .padding(8.dp) // Add padding around the image
+                .fillMaxHeight()
+                .clickable(onClick = onClick)
         )
+    }
+}
 
-        FilledButtonExample {
+// a front-page view with home page image('pku') and text ("Hello, World!"), where the "World!" bit is clickable to let user enter username.
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FrontPageView(username: String = "World", onUsernameChange: (String) -> Unit, stage: Int = 1) {
+    var stageLocal = stage
+    Row (
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Card() {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FrontPageImage(onClick = { stageLocal += 1 })
 
+
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    var isTyping by remember { mutableStateOf(false) }
+
+
+                    Text(
+                        text = "Hello,",
+                        modifier = Modifier
+                            .clip(RectangleShape)
+                    )
+
+                    when (isTyping) {
+                        false -> Text(
+                            text = "World!",
+                            modifier = Modifier
+                                .clip(RectangleShape)
+                                .clickable(onClick = { isTyping = true })
+                        )
+                        // if true, a input field for user to enter username. username will be returned with passed callback.
+                        true -> {
+                            TextField(
+                                value = username,
+                                onValueChange = { onUsernameChange(it) },
+                                label = { username },
+                                maxLines = 2,
+                                textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.Bold),
+                                modifier = Modifier
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = "!",
+                        modifier = Modifier
+                            .clip(RectangleShape)
+                    )
+                }
+
+                // repeat UselessSwitch() stageLocal - 1 times, and updates when stageLocal increases.
+                for (i in 0 until stageLocal) {
+                    UselessSwitch()
+                }
+            }
         }
     }
 }
 
+
+// a useless switch. when switch is false, a text saying "Here is a useless switch." will be shown. when switch is true, a text saying "This switch is useless." will be shown.
 @Composable
-fun FilledButtonExample(onClick: () -> Unit) {
-    Button(onClick = { onClick() }) {
-        Text("Filled")
+fun UselessSwitch() {
+    var switch by remember { mutableStateOf(false) }
+    val onSwitchChange: (Boolean) -> Unit = {
+        switch = it
+    }
+
+    Column (
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        // a text saying "Here is a useless switch." if switch is false, or "This switch is useless." if switch is true.
+        when (switch) {
+            false -> Text(
+                text = "Here is a useless switch.",
+                modifier = Modifier
+                    .clip(RectangleShape)
+            )
+            true -> Text(
+                text = "This switch is useless.",
+                modifier = Modifier
+                    .clip(RectangleShape)
+            )
+        }
+
+        // a switch from material3
+        Switch(
+            checked = switch,
+            onCheckedChange = onSwitchChange,
+            modifier = Modifier
+                .padding(8.dp)
+                .clip(RectangleShape)
+        )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComposeTheme {
-        Greeting()
-    }
-}
-
