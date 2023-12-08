@@ -54,7 +54,8 @@ class MainActivity : ComponentActivity() {
             ComposeTheme {
                 when (stage) {
                     false -> SimpleImageCard(onClick = stageIncrement)
-                    true -> MainView()
+                    true ->
+                        MainView(MainViewModel())
                 }
             }
         }

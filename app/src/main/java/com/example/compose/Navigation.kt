@@ -1,5 +1,6 @@
 package com.example.compose
 
+import android.content.Context
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Icon
@@ -72,6 +73,53 @@ import androidx.annotation.DrawableRes
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
 
+
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Bundle
+import androidx.core.location.LocationManagerCompat.requestLocationUpdates
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+
+public class MainViewModel: ViewModel() {
+    val location = MutableLiveData(listOf(39.9869, 116.3059))
+
+    // get location of device
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(newLocation: Location) {
+            location.value = listOf(newLocation.latitude, newLocation.longitude)
+        }
+
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            // Handle provider status changes
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            // Handle provider being enabled
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            // Handle provider being disabled
+        }
+    }
+
+    val locationList = MutableLiveData(listOf(listOf(39.9869, 116.3059), listOf(39.9899, 116.3039), listOf(39.9862, 116.3099)))
+
+    init {
+        viewModelScope.launch {
+//            val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener)
+        }
+    }
+}
+
+
 sealed class Screen(
     val route: String,
     @StringRes val resourceId: Int,
@@ -90,7 +138,7 @@ val items = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun MainView() {
+public fun MainView(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -117,7 +165,7 @@ public fun MainView() {
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = Screen.Map.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Map.route) { MapView() }
+            composable(Screen.Map.route) { MapView(mainViewModel) }
             composable(Screen.Chat.route) { ChatView() }
         }
     }
@@ -155,7 +203,7 @@ public fun MainViewOld(username: String = "World") {
     }
 
     when (state) {
-        0 -> MapView()
+        0 -> MapView(mainViewModel = MainViewModel())
         1 -> ChatView()
         2 -> BrowseView()
         3 -> UserView()
