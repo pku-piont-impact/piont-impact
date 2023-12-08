@@ -95,7 +95,12 @@ fun centreIcon() {
 }
 
 @Composable
-fun crowdIcon(pos: Location, scaling: Int = 20000,imageVector: ImageVector = Icons.Filled.Face, backgroundColor: Color = Color.White.copy(alpha = 0.3f), size: Dp = 50.dp, padding: Dp = 10.dp) {
+fun crowdIcon(pos: Location,
+              scaling: Int = 20000,
+              imageVector: ImageVector = Icons.Filled.Face,
+              backgroundColor: Color = Color.White.copy(alpha = 0.3f),
+              size: Dp = 50.dp,
+              padding: Dp = 10.dp) {
     Box(modifier = Modifier.fillMaxSize()) {
         // this icon should be at the centre
         Icon(
@@ -106,11 +111,11 @@ fun crowdIcon(pos: Location, scaling: Int = 20000,imageVector: ImageVector = Ico
                 .size(size)
                 .padding(padding)
                 .align(Alignment.Center)
-                .offset(x = (pos.last() * scaling).toInt().dp, y = (-pos.first() * scaling).toInt().dp)
+                .offset(x = (pos.last() * scaling).toInt().dp,
+                        y = (-pos.first() * scaling).toInt().dp)
                 .background(color = backgroundColor)
         )
     }
-
 }
 
 // convert degree minute second to decimal degree
@@ -136,7 +141,12 @@ val landmarkList = listOf(
 @Composable
 fun LandmarkLayer(myLocation: Location) {
     for (location in landmarkList) {
-        crowdIcon(pos = listOf(location.first() - myLocation.first(), location.last() - myLocation.last()), imageVector = Icons.Filled.Add, size = 30.dp, backgroundColor = Color.White.copy(alpha = 0.3f))
+        crowdIcon(
+            pos = listOf(location.first() - myLocation.first(),
+            location.last() - myLocation.last()),
+            imageVector = Icons.Filled.Add,
+            size = 30.dp,
+            backgroundColor = Color.White.copy(alpha = 0.3f))
     }
 }
 
