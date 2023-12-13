@@ -1,6 +1,8 @@
 package com.example.compose
 
 import android.R.color
+import android.content.Context
+import android.location.LocationManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,25 +39,82 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), YOUR_REQUEST_CODE)
-//        }
+        // check that location permission is granted
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val getLocation: () -> LocationData = {
+            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.KEY_PROVIDER_ENABLED)
+            }
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.EXTRA_PROVIDER_ENABLED)
+            }
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+            }
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+            if (location != null) {
+                LocationData(
+                    location.latitude,
+                    location.longitude,
+                    location.altitude,
+                    location.speed,
+                    location.accuracy,
+                    location.time,
+                    location.bearing,
+                    location.provider?:""
+                )
+            } else {
+                LocationData(-1.0, -1.0, 0.0, 0.0f, 0.0f, 0L, 0.0f, "")
+            }
+        }
+
+        // a coroutine that uploads location data to server every 50 seconds
+        val locationCoroutine = kotlinx.coroutines.GlobalScope.launch {
+            while (true) {
+                val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    val altitude = location.altitude
+                    val speed = location.speed
+                    val accuracy = location.accuracy
+                    val time = location.time
+                    val bearing = location.bearing
+                    val provider = location.provider
+                    val locationData = LocationData(latitude, longitude, altitude, speed, accuracy, time, bearing, provider?:"")
+                    val locationDataJson = locationData.toJson()
+                    val response = uploadLocationData(locationDataJson)
+                }
+                kotlinx.coroutines.delay(50000)
+            }
+        }
 
         setContent {
+
             var stage by remember { mutableStateOf(false) }
             val stageIncrement: () -> Unit = {
                 stage = true
             }
             ComposeTheme {
                 when (stage) {
-                    false -> SimpleImageCard(onClick = stageIncrement)
+                    false -> SimpleImageCard(onClick = stageIncrement, location = getLocation())
                     true ->
-                        MainView(MainViewModel())
+                        MainView(MainViewModel(getLocation()))
                 }
             }
         }
@@ -65,13 +124,19 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleImageCard(padding: Dp = 8.dp, onClick: () -> Unit) {
-    Row (
-        verticalAlignment = Alignment.CenterVertically
+fun SimpleImageCard(padding: Dp = 8.dp, onClick: () -> Unit, location: LocationData = LocationData(0.0, 0.0, 0.0, 0.0f, 0.0f, 0L, 0.0f, "")) {
+    Column (
+//        verticalAlignment = Alignment.CenterVertically
     ) {
         ElevatedCard(onClick = onClick) {
             FrontPageImage(onClick = onClick)
         }
+
+        // a text message displaying location. text color should be black
+        Text(
+            text = "Location: (${location.latitude}, ${location.longitude})",
+            modifier = Modifier
+        )
     }
 }
 

@@ -78,6 +78,8 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -87,8 +89,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-public class MainViewModel: ViewModel() {
-    val location = MutableLiveData(listOf(39.9869, 116.3059))
+public class MainViewModel(private val locationData: LocationData): ViewModel() {
+    // location is initialized from an outside parameter
+    var location = MutableLiveData(listOf(39.9869, 116.3059))
 
     // get location of device
     private val locationListener = object : LocationListener {
@@ -112,10 +115,8 @@ public class MainViewModel: ViewModel() {
     val locationList = MutableLiveData(listOf(listOf(39.9869, 116.3059), listOf(39.9899, 116.3039), listOf(39.9862, 116.3099)))
 
     init {
-        viewModelScope.launch {
-//            val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener)
-        }
+        // change location to lontitude and latitude provided in locationData
+        location.value = listOf(locationData.latitude, locationData.longitude)
     }
 }
 
@@ -169,45 +170,4 @@ public fun MainView(mainViewModel: MainViewModel) {
             composable(Screen.Chat.route) { ChatView() }
         }
     }
-}
-
-
-
-
-
-
-
-
-
-
-@Composable
-public fun MainViewOld(username: String = "World") {
-    val maxState = 4
-    var state by remember {
-        mutableIntStateOf(0)
-    }
-    val stateIncrement: () -> Unit = {
-        state += 1
-        if (state >= maxState) {
-            state = 0
-        }
-    }
-    val stateDecrement: () -> Unit = {
-        state -= 1
-        if (state < 0) {
-            state = maxState - 1
-        }
-    }
-    val stateChange: (Int) -> Unit = {
-        state = it
-    }
-
-    when (state) {
-        0 -> MapView(mainViewModel = MainViewModel())
-        1 -> ChatView()
-        2 -> BrowseView()
-        3 -> UserView()
-    }
-
-
 }
