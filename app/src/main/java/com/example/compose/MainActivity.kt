@@ -42,6 +42,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
+public data class LocationData(
+    val latitude: Double,
+    val longitude: Double,
+    val altitude: Double,
+    val speed: Float,
+    val accuracy: Float,
+    val time: Long,
+    val bearing: Float,
+    val provider: String
+) {
+    fun toJson(): String {
+        return "{\"latitude\":$latitude,\"longitude\":$longitude,\"altitude\":$altitude,\"speed\":$speed,\"accuracy\":$accuracy,\"time\":$time,\"bearing\":$bearing,\"provider\":\"$provider\"}"
+    }
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +113,7 @@ class MainActivity : ComponentActivity() {
                     val provider = location.provider
                     val locationData = LocationData(latitude, longitude, altitude, speed, accuracy, time, bearing, provider?:"")
                     val locationDataJson = locationData.toJson()
-                    val response = uploadLocationData(locationDataJson)
+//                    val response = uploadLocationData(locationDataJson)
                 }
                 kotlinx.coroutines.delay(50000)
             }
