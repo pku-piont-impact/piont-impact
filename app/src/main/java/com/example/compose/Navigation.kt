@@ -78,45 +78,59 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import kotlin.random.Random
 public class MainViewModel(private val locationData: LocationData): ViewModel() {
     // location is initialized from an outside parameter
-    var location = MutableLiveData(listOf(39.9869, 116.3059))
-
-    // get location of device
-    private val locationListener = object : LocationListener {
-        override fun onLocationChanged(newLocation: Location) {
-            location.value = listOf(newLocation.latitude, newLocation.longitude)
-        }
-
-        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-            // Handle provider status changes
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            // Handle provider being enabled
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            // Handle provider being disabled
-        }
-    }
+    val location = MutableLiveData(listOf(-2.0, -2.0))
 
     val locationList = MutableLiveData(listOf(listOf(39.9869, 116.3059), listOf(39.9899, 116.3039), listOf(39.9862, 116.3099)))
+
+    private fun fetchList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://ginzcyijvh.execute-api.ap-southeast-2.amazonaws.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val service = retrofit.create(LambdaService::class.java)
+            if (true) {
+                //use retrofit to get random number pairs from server
+                try {
+                    val randomNumberPairs = service.getRandomNumberPairs()
+                    Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + randomNumberPairs.randomNumberPairs.toString())
+                    withContext(Dispatchers.Main) {
+                        // Update UI with the fetched data
+                        locationList.value = randomNumberPairs.randomNumberPairs
+                    }
+                } catch (e: Exception) {
+                    locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
+                }
+            }
+        }
+//        locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
+    }
 
     init {
         // change location to lontitude and latitude provided in locationData
         location.value = listOf(locationData.latitude, locationData.longitude)
+        fetchList()
     }
 }
 

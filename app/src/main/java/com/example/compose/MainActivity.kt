@@ -41,6 +41,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.http.GET
+import retrofit2.Callback
+import java.io.IOException
+
+import android.location.Location
+import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.withContext
+import retrofit2.converter.gson.GsonConverterFactory
 
 public data class LocationData(
     val latitude: Double,
@@ -113,7 +125,6 @@ class MainActivity : ComponentActivity() {
                     val provider = location.provider
                     val locationData = LocationData(latitude, longitude, altitude, speed, accuracy, time, bearing, provider?:"")
                     val locationDataJson = locationData.toJson()
-//                    val response = uploadLocationData(locationDataJson)
                 }
                 kotlinx.coroutines.delay(50000)
             }
@@ -137,6 +148,16 @@ class MainActivity : ComponentActivity() {
 }
 
 
+data class RandomNumberPairsResponse(
+    @SerializedName("random_number_pairs")
+    val randomNumberPairs: List<List<Double>>
+)
+
+public interface LambdaService {
+    @GET("/default/myFunctionName")
+    suspend fun getRandomNumberPairs(): RandomNumberPairsResponse
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleImageCard(padding: Dp = 8.dp, onClick: () -> Unit, location: LocationData = LocationData(0.0, 0.0, 0.0, 0.0f, 0.0f, 0L, 0.0f, "")) {
@@ -149,7 +170,7 @@ fun SimpleImageCard(padding: Dp = 8.dp, onClick: () -> Unit, location: LocationD
 
         // a text message displaying location. text color should be black
         Text(
-            text = "Location: (${location.latitude}, ${location.longitude})",
+            text = "Location: (${location.latitude}, ${location.longitude})\n Provider: ${location.provider}",
             modifier = Modifier
         )
     }
@@ -169,108 +190,6 @@ fun FrontPageImage(onClick: () -> Unit = {}) {
             modifier = Modifier
                 .fillMaxHeight()
                 .clickable(onClick = onClick)
-        )
-    }
-}
-
-// a front-page view with home page image('pku') and text ("Hello, World!"), where the "World!" bit is clickable to let user enter username.
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FrontPageView(username: String = "World", onUsernameChange: (String) -> Unit, stage: Int = 1) {
-    var stageLocal = stage
-    Row (
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Card() {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                FrontPageImage(onClick = { stageLocal += 1 })
-
-
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    var isTyping by remember { mutableStateOf(false) }
-
-
-                    Text(
-                        text = "Hello,",
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                    )
-
-                    when (isTyping) {
-                        false -> Text(
-                            text = "World!",
-                            modifier = Modifier
-                                .clip(RectangleShape)
-                                .clickable(onClick = { isTyping = true })
-                        )
-                        // if true, a input field for user to enter username. username will be returned with passed callback.
-                        true -> {
-                            TextField(
-                                value = username,
-                                onValueChange = { onUsernameChange(it) },
-                                label = { username },
-                                maxLines = 2,
-                                textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.Bold),
-                                modifier = Modifier
-                            )
-                        }
-                    }
-
-                    Text(
-                        text = "!",
-                        modifier = Modifier
-                            .clip(RectangleShape)
-                    )
-                }
-
-                // repeat UselessSwitch() stageLocal - 1 times, and updates when stageLocal increases.
-                for (i in 0 until stageLocal) {
-                    UselessSwitch()
-                }
-            }
-        }
-    }
-}
-
-
-// a useless switch. when switch is false, a text saying "Here is a useless switch." will be shown. when switch is true, a text saying "This switch is useless." will be shown.
-@Composable
-fun UselessSwitch() {
-    var switch by remember { mutableStateOf(false) }
-    val onSwitchChange: (Boolean) -> Unit = {
-        switch = it
-    }
-
-    Column (
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        // a text saying "Here is a useless switch." if switch is false, or "This switch is useless." if switch is true.
-        when (switch) {
-            false -> Text(
-                text = "Here is a useless switch.",
-                modifier = Modifier
-                    .clip(RectangleShape)
-            )
-            true -> Text(
-                text = "This switch is useless.",
-                modifier = Modifier
-                    .clip(RectangleShape)
-            )
-        }
-
-        // a switch from material3
-        Switch(
-            checked = switch,
-            onCheckedChange = onSwitchChange,
-            modifier = Modifier
-                .padding(8.dp)
-                .clip(RectangleShape)
         )
     }
 }
