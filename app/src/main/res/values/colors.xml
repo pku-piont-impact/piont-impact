@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0000FF</color>
+    <color name="deepSkyBlue">#00BFFF</color>
+    <color name="Purple80">#FFD0BCFF</color>
+    <color name="PurpleGrey80">#FFCCC2DC</color>
+    <color name="Pink80">#FFEFB8C8</color>
+    <color name="Purple40">#FF6650a4</color>
+    <color name="PurpleGrey40">#FF625b71</color>
+    <color name="Pink40">#FF7D5260</color>
+
+</resources>

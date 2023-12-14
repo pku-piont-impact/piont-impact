@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
         BtnReturnToMain = (Button) findViewById(R.id.ReturnToMain);
         ETUserName = (EditText) findViewById(R.id.userName);
         ETPassword = (EditText) findViewById(R.id.password);
-/*
+
         BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
- */
+
         BtnReturnToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

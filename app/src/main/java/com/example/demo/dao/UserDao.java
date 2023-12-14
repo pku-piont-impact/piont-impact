@@ -9,10 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 
-/**
- * author: yan
- * date: 2022.02.17
- * **/
 public class UserDao {
 
     private static final String TAG = "mysql-demo-UserDao";
@@ -20,21 +16,21 @@ public class UserDao {
     /**
      * function: 登录
      * */
-    public int login(String userAccount, String userPassword){
+    public int login(String userName, String userPassword){
 
         HashMap<String, Object> map = new HashMap<>();
         // 根据数据库名称，建立连接
         Connection connection = JDBCUtils.getConn();
         int msg = 0;
         try {
-            // mysql简单的查询语句。这里是根据user表的userAccount字段来查询某条记录
-            String sql = "select * from user where userAccount = ?";
+            // mysql简单的查询语句。这里是根据user表的userName字段来查询某条记录
+            String sql = "select * from user where userName = ?";
             if (connection != null){// connection不为null表示与数据库建立了连接
                 PreparedStatement ps = connection.prepareStatement(sql);
                 if (ps != null){
-                    Log.e(TAG,"账号：" + userAccount);
+                    Log.e(TAG,"用户名：" + userName);
                     //根据账号进行查询
-                    ps.setString(1, userAccount);
+                    ps.setString(1, userName);
                     // 执行sql查询语句并返回结果集
                     ResultSet rs = ps.executeQuery();
                     int count = rs.getMetaData().getColumnCount();
@@ -72,7 +68,8 @@ public class UserDao {
             }else {
                 msg = 0;
             }
-        }catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
             Log.d(TAG, "异常login：" + e.getMessage());
             msg = 0;
@@ -84,24 +81,23 @@ public class UserDao {
     /**
      * function: 注册
      * */
-    public boolean register(User user){
+    public boolean SignIn(User user){
         HashMap<String, Object> map = new HashMap<>();
         // 根据数据库名称，建立连接
         Connection connection = JDBCUtils.getConn();
 
         try {
-            String sql = "insert into user(userAccount,userPassword,userName,userType,userState,userDel) values (?,?,?,?,?,?)";
+            String sql = "insert into user(userPassword,userName,userType,userState,userDel) values (?,?,?,?,?)";
             if (connection != null){// connection不为null表示与数据库建立了连接
                 PreparedStatement ps = connection.prepareStatement(sql);
                 if (ps != null){
 
                     //将数据插入数据库
-                    ps.setString(1,user.getUserAccount());
-                    ps.setString(2,user.getUserPassword());
-                    ps.setString(3,user.getUserName());
-                    ps.setInt(4,user.getUserType());
-                    ps.setInt(5, user.getUserState());
-                    ps.setInt(6,user.getUserDel());
+                    ps.setString(1,user.getUserPassword());
+                    ps.setString(2,user.getUserName());
+                    ps.setInt(3,user.getUserType());
+                    ps.setInt(4, user.getUserState());
+                    ps.setInt(5,user.getUserDel());
 
                     // 执行sql查询语句并返回结果集
                     int rs = ps.executeUpdate();
@@ -117,7 +113,8 @@ public class UserDao {
             else {
                 return  false;
             }
-        }catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
             Log.e(TAG, "异常register：" + e.getMessage());
             return false;
@@ -128,7 +125,7 @@ public class UserDao {
     /**
      * function: 根据账号进行查找该用户是否存在
      * */
-    public User findUser(String userAccount) {
+    public User findUser(String userName) {
 
         // 根据数据库名称，建立连接
         Connection connection = JDBCUtils.getConn();
@@ -138,19 +135,18 @@ public class UserDao {
             if (connection != null){// connection不为null表示与数据库建立了连接
                 PreparedStatement ps = connection.prepareStatement(sql);
                 if (ps != null) {
-                    ps.setString(1, userAccount);
+                    ps.setString(1, userName);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         //注意：下标是从1开始
                         int id = rs.getInt(1);
-                        String userAccount1 = rs.getString(2);
-                        String userPassword = rs.getString(3);
-                        String userName = rs.getString(4);
-                        int userType = rs.getInt(5);
-                        int userState = rs.getInt(6);
-                        int userDel = rs.getInt(7);
-                        user = new User(id, userAccount1, userPassword, userName, userType, userState, userDel);
+                        String userPassword = rs.getString(2);
+                        String userName1 = rs.getString(3);
+                        int userType = rs.getInt(4);
+                        int userState = rs.getInt(5);
+                        int userDel = rs.getInt(6);
+                        user = new User(id, userPassword, userName1, userType, userState, userDel);
                     }
                 }
             }

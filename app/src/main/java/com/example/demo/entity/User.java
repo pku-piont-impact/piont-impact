@@ -1,22 +1,17 @@
 package com.example.demo.entity;
 
 public class User {
-
     private int id;
-    private String userAccount;
     private String userPassword;
     private String userName;
     private int userType;
     private int userState;
     private int userDel;
-
-
     public User() {
     }
 
-    public User(int id, String userAccount, String userPassword, String userName, int userType, int userState, int userDel) {
+    public User(int id, String userPassword, String userName, int userType, int userState, int userDel) {
         this.id = id;
-        this.userAccount = userAccount;
         this.userPassword = userPassword;
         this.userName = userName;
         this.userType = userType;
@@ -30,14 +25,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
     }
 
     public String getUserPassword() {

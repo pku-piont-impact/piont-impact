@@ -43,8 +43,7 @@
         android:padding="16dp"
         android:layout_marginTop="80dp"
         android:text="注册"
-        android:textSize="30sp"
-        android:onClick="SignIn"/>
+        android:textSize="30sp" />
     <Button
         android:id="@+id/ReturnToMain"
         android:layout_width="wrap_content"
