@@ -2,12 +2,18 @@ package com.example.demo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.demo.dao.UserDao;
+import com.example.demo.entity.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,23 +36,22 @@ public class LoginActivity extends AppCompatActivity {
         BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userName = ETUserName.getText().toString();
-                password = ETPassword.getText().toString();
-                if(userName.isEmpty()){
-                    Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
-                }
-                else if(password.isEmpty()){
-                    Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                }
-                //跳转到地图界面
-                else if(!password.equals("123")){
-                    Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(LoginActivity.this,"登录成功！",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this,MapActivity.class);
-                    startActivity(intent);
-                }
+                new Thread(){
+                    @Override
+                    public void run() {
+                        UserDao userDao = new UserDao();
+                        userName = ETUserName.getText().toString();
+                        password = ETPassword.getText().toString();
+                        if(userName.isEmpty()){
+                            Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(password.isEmpty()){
+                            Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                        }
+                        int msg = userDao.login(userName,password);
+                        hand1.sendEmptyMessage(msg);
+                    }
+                }.start();
             }
         });
 
@@ -59,4 +64,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    @SuppressLint("HandlerLeak")
+    final Handler hand1 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0){
+                Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_LONG).show();
+            } else if (msg.what == 1) {
+                Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(LoginActivity.this,MapActivity.class);
+                startActivity(intent);
+            } else if (msg.what == 2){
+                Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_LONG).show();
+            } else if (msg.what == 3){
+                Toast.makeText(getApplicationContext(), "账号不存在", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 }
