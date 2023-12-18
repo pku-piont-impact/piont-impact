@@ -82,7 +82,6 @@ class PersonalView : ComponentActivity() {
                 LocationData(-1.0, -1.0, 0.0, 0.0f, 0.0f, 0L, 0.0f, "")
             }
         }
-
         // a coroutine that uploads location data to server every 50 seconds
         val locationCoroutine = kotlinx.coroutines.GlobalScope.launch {
             while (true) {
@@ -102,7 +101,6 @@ class PersonalView : ComponentActivity() {
                 kotlinx.coroutines.delay(50000)
             }
         }
-
         setContent {
 
             var stage by remember { mutableStateOf(false) }

@@ -48,6 +48,7 @@ public class LoginActivity extends Activity {
                     Intent intent = new Intent(LoginActivity.this, PersonalView.class);
                     startActivity(intent);
                 }
+                /*
                 new Thread(){
                     @Override
                     public void run() {
@@ -57,6 +58,8 @@ public class LoginActivity extends Activity {
                         hand1.sendEmptyMessage(msg);
                     }
                 }.start();
+
+                 */
             }
         });
 

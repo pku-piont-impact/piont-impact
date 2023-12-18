@@ -117,10 +117,10 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
                     Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + randomNumberPairs.randomNumberPairs.toString())
                     withContext(Dispatchers.Main) {
                         // Update UI with the fetched data
-                        locationList.value = randomNumberPairs.randomNumberPairs
+                        locationList.postValue(randomNumberPairs.randomNumberPairs)
                     }
                 } catch (e: Exception) {
-                    locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
+                    locationList.postValue(listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872))))
                 }
             }
         }
@@ -129,7 +129,7 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
 
     init {
         // change location to lontitude and latitude provided in locationData
-        location.value = listOf(locationData.latitude, locationData.longitude)
+        location.postValue(listOf(locationData.latitude, locationData.longitude))
         fetchList()
     }
 }
