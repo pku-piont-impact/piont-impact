@@ -10,11 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
 
 import com.example.compose.dao.UserDao;
 import com.example.compose.entity.User;
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends Activity {
     private static final String TAG = "mysql-test-register";
     private Button BtnSignIn;
     private Button BtnReturnToMain;

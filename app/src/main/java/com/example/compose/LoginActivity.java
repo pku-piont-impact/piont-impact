@@ -10,11 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
 
 import com.example.compose.dao.UserDao;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private Button BtnLogin;
     private Button BtnReturnToMain;
@@ -35,18 +35,24 @@ public class LoginActivity extends AppCompatActivity {
         BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                userName = ETUserName.getText().toString();
+                password = ETPassword.getText().toString();
+                if(userName.isEmpty()){
+                    Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
+                }
+                else if(password.isEmpty()){
+                    Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, PersonalView.class);
+                    startActivity(intent);
+                }
                 new Thread(){
                     @Override
                     public void run() {
                         UserDao userDao = new UserDao();
-                        userName = ETUserName.getText().toString();
-                        password = ETPassword.getText().toString();
-                        if(userName.isEmpty()){
-                            Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
-                        }
-                        else if(password.isEmpty()){
-                            Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                        }
+
                         int msg = userDao.login(userName,password);
                         hand1.sendEmptyMessage(msg);
                     }

@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private Button btnGoToLogin;
     private Button btnGoToSignIn;
