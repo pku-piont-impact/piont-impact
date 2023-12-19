@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="40dp"
-        android:text="缘深
-        点中点"
+        android:text="缘深\n点中点"
         android:textSize="60sp" />
 
     <Button
