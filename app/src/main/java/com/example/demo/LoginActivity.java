@@ -36,22 +36,24 @@ public class LoginActivity extends AppCompatActivity {
         BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Thread(){
-                    @Override
-                    public void run() {
-                        UserDao userDao = new UserDao();
-                        userName = ETUserName.getText().toString();
-                        password = ETPassword.getText().toString();
-                        if(userName.isEmpty()){
-                            Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
+                userName = ETUserName.getText().toString();
+                password = ETPassword.getText().toString();
+                if(userName.isEmpty()){
+                    Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT).show();
+                }
+                else if(password.isEmpty()){
+                    Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            UserDao userDao = new UserDao();
+                            int msg = userDao.login(userName,password);
+                            hand1.sendEmptyMessage(msg);
                         }
-                        else if(password.isEmpty()){
-                            Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                        }
-                        int msg = userDao.login(userName,password);
-                        hand1.sendEmptyMessage(msg);
-                    }
-                }.start();
+                    }.start();
+                }
             }
         });
 

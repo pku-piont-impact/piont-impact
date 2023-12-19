@@ -30,7 +30,7 @@ public class UserDao {
                 if (ps != null){
                     Log.e(TAG,"用户名：" + userName);
                     //根据账号进行查询
-                    ps.setString(1, userName);
+                    ps.setString(2, userName);
                     // 执行sql查询语句并返回结果集
                     ResultSet rs = ps.executeQuery();
                     int count = rs.getMetaData().getColumnCount();
