@@ -29,15 +29,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-    }
-
-    public void reg(View view){
-        startActivity(new Intent(getApplicationContext(),SignInActivity.class));
-    }
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
         btnGoToSignIn = (Button) findViewById(R.id.JumpToSignIn);
         btnGoToSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +39,10 @@ public class MainActivity extends Activity {
             }
         });
     }
-     */
+    /*
+    public void reg(View view){
+        startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+    }
+    */
 }
 

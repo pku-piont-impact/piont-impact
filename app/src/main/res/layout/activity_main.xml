@@ -26,6 +26,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/button"
         android:text="登录" />
+
     <Button
         android:id="@+id/JumpToSignIn"
         android:layout_width="match_parent"
@@ -33,7 +34,6 @@
         android:textSize="30sp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button"
-        android:onClick="reg"
         android:text="注册" />
 
 
