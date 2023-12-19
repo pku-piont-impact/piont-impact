@@ -105,10 +105,12 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
 
     private fun fetchList() {
         viewModelScope.launch(Dispatchers.IO) {
+            // 创建一个Retrofit对象，用于与亚马逊的API进行通信
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://ginzcyijvh.execute-api.ap-southeast-2.amazonaws.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
+            // 创建一个LambdaService对象，用于调用亚马逊的API接口
             val service = retrofit.create(LambdaService::class.java)
             if (true) {
                 //use retrofit to get random number pairs from server
@@ -124,7 +126,7 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
                 }
             }
         }
-//        locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
+        // locationList.postValue(listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872))));
     }
 
     init {
