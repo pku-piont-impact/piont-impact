@@ -54,6 +54,11 @@ public class SignInActivity extends Activity {
                     Toast.makeText(SignInActivity.this,"两次输入的密码不一样",Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    Toast.makeText(SignInActivity.this,"注册成功！",Toast.LENGTH_LONG).show();
+                    //跳转回主界面
+                    Intent intent = new Intent(SignInActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    /*
                     User user = new User();
 
                     user.setUserPassword(password);
@@ -81,18 +86,9 @@ public class SignInActivity extends Activity {
                             hand.sendEmptyMessage(msg);
                         }
                     }.start();
+
+                     */
                 }
-        /*
-                userName = ETUserName.getText().toString();
-                password = ETPassword.getText().toString();
-                passwordAgain = ETPasswordAgain.getText().toString();
-                else {
-                    Toast.makeText(SignInActivity.this,"注册成功！",Toast.LENGTH_LONG).show();
-                    //跳转回主界面
-                    Intent intent = new Intent(SignInActivity.this,MainActivity.class);
-                    startActivity(intent);
-                }
-         */
             }
         });
         BtnReturnToMain.setOnClickListener(new View.OnClickListener() {

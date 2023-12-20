@@ -14,6 +14,15 @@ import android.app.Activity;
 
 import com.example.compose.dao.UserDao;
 
+import java.util.Arrays;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class LoginActivity extends Activity {
 
     private Button BtnLogin;
@@ -44,9 +53,63 @@ public class LoginActivity extends Activity {
                     Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://e6u5zapw7l.execute-api.ap-southeast-2.amazonaws.com")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    LoginService service = retrofit.create(LoginService.class);
+                    Call<LoginResponse> call = service.login();
+                    call.enqueue(new Callback<LoginResponse>() {
+                        @Override
+                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                            if (response.isSuccessful()) {
+                                LoginResponse loginResponse = response.body();
+                                // 从loginResponse中获取你需要的信息
+                                int statusCode = loginResponse.getStatusCode();
+                                List<LoginResponse.UserPair> userPairs = loginResponse.getBody().getUserPairs();
+                                // 创建两个数组来存储userName和password
+                                String[] userNames = new String[userPairs.size()];
+                                String[] passwords = new String[userPairs.size()];
+                                // 遍历userPairs，将userName和password分别存入数组
+                                for (int i = 0; i < userPairs.size(); i++) {
+                                    userNames[i] = userPairs.get(i).getUserName();
+                                    passwords[i] = userPairs.get(i).getPassword();
+                                }
+                                // 打印或者使用数组中的数据
+                                int i;
+                                for (i = 0; i < userPairs.size(); i++) {
+                                    if(userName == userNames[i] && password == passwords[i]){
+                                        Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(LoginActivity.this, PersonalView.class);
+                                        startActivity(intent);
+                                        break;
+                                    }
+                                }
+                                if(i == userPairs.size()){
+                                    Toast.makeText(getApplicationContext(), "用户名或密码错误", Toast.LENGTH_LONG).show();
+                                }
+                                // Toast.makeText(getApplicationContext(), "statusCode: " + statusCode, Toast.LENGTH_LONG).show();
+                                // System.out.println("statusCode: " + statusCode);
+                                // System.out.println("userNames: " + Arrays.toString(userNames));
+                                // System.out.println("passwords: " + Arrays.toString(passwords));
+                            } else {
+                                // 处理错误的响应
+                                System.out.println("response code: " + response.code());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoginResponse> call, Throwable t) {
+                            // 处理请求失败的情况
+                            t.printStackTrace();
+                        }
+                    });
+/*
                     Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, PersonalView.class);
                     startActivity(intent);
+
+ */
                 }
                 /*
                 new Thread(){
