@@ -27,7 +27,7 @@ public class JDBCUtils {
             }
             try {
                 String ip = "182.92.182.33";
-                String url = "jdbc:mysql://182.92.182.33:3306/project?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+                String url = "jdbc:mysql://182.92.182.33:3306/project?useSSL=false";
                 connection = DriverManager.getConnection(url, user, password);
                 Log.d(TAG, "数据库连接成功");
             }
