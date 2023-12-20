@@ -65,7 +65,6 @@ public class LoginActivity extends Activity {
                             if (response.isSuccessful()) {
                                 LoginResponse loginResponse = response.body();
                                 // 从loginResponse中获取你需要的信息
-                                int statusCode = loginResponse.getStatusCode();
                                 List<LoginResponse.UserPair> userPairs = loginResponse.getBody().getUserPairs();
                                 // 创建两个数组来存储userName和password
                                 String[] userNames = new String[userPairs.size()];
