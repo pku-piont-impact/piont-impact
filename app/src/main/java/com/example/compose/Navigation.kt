@@ -113,18 +113,17 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
             // 创建一个LambdaService对象，用于调用亚马逊的API接口
             val service = retrofit.create(LambdaService::class.java)
             if (true) {
-
                 try {
-                                        var long: Double = 0.0
-                                        var lat: Double = 0.0
-                                        withContext(Dispatchers.Main) {
-                                                long = location.value!![1]
-                                                lat = location.value!![0]
-                                            }
-                                        service.postLocation(LocationRequest(long, lat))
-                                    } catch (e: Exception) {
-                                        Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + e.toString())
-                                    }
+                    var long: Double = 0.0
+                    var lat: Double = 0.0
+                    withContext(Dispatchers.Main) {
+                            long = location.value!![1]
+                            lat = location.value!![0]
+                        }
+                    service.postLocation(LocationRequest(long, lat))
+                } catch (e: Exception) {
+                    Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + e.toString())
+                }
 
                 //use retrofit to get random number pairs from server
                 try {
@@ -143,7 +142,7 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
     }
 
     init {
-        // change location to lontitude and latitude provided in locationData
+        // change location to longitude and latitude provided in locationData
         location.value = listOf(locationData.latitude, locationData.longitude)
         fetchList()
     }
