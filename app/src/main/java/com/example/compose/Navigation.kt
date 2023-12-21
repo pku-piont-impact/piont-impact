@@ -111,28 +111,45 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
                 .build()
             val service = retrofit.create(LambdaService::class.java)
             if (true) {
+
+                try {
+                    var long: Double = 0.0
+                    var lat: Double = 0.0
+                    withContext(Dispatchers.Main) {
+                        long = location.value!![1]
+                        lat = location.value!![0]
+                    }
+                    service.postLocation(LocationRequest(long, lat))
+                } catch (e: Exception) {
+                    Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + e.toString())
+                }
+
                 //use retrofit to get random number pairs from server
                 try {
+
                     val randomNumberPairs = service.getRandomNumberPairs()
-                    Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + randomNumberPairs.randomNumberPairs.toString())
+//                    Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + randomNumberPairs.randomNumberPairs.toString())
                     withContext(Dispatchers.Main) {
                         // Update UI with the fetched data
                         locationList.value = randomNumberPairs.randomNumberPairs
                     }
                 } catch (e: Exception) {
+                    Log.w("WarningTag", "OOOOOOOOOOOOOOOOOOOO" + e.toString())
                     locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
                 }
             }
         }
-//        locationList.value = listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872)))
     }
 
     init {
         // change location to lontitude and latitude provided in locationData
         location.value = listOf(locationData.latitude, locationData.longitude)
         fetchList()
+
     }
 }
+
+
 
 
 sealed class Screen(

@@ -60,6 +60,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.LiveData
 
 import androidx.compose.ui.geometry.Offset
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sqrt
 
 typealias Location = List<Double>
 val defaultLocation: Location = listOf(39.9869, 116.3059)
@@ -78,7 +81,7 @@ public fun MapView(mainViewModel: MainViewModel) {
 
 
 @Composable
-fun centreIcon() {
+fun centreIcon(size: Dp = 50.dp, padding: Dp = 10.dp) {
     Box(modifier = Modifier.fillMaxSize()) {
         // this icon should be at the centre
         Icon(
@@ -86,10 +89,10 @@ fun centreIcon() {
             contentDescription = "User Location",
             // change the color of icon to white
             modifier = Modifier
-                .size(50.dp)
-                .padding(10.dp)
+                .size(size)
+                .padding(padding)
                 .align(Alignment.Center)
-                .background(color = Color.White.copy(alpha = 0.3f))
+                .background(color = Color.Blue.copy(alpha = 0.3f))
         )
     }
 }
@@ -139,13 +142,13 @@ val landmarkList = listOf(
 
 
 @Composable
-fun LandmarkLayer(myLocation: Location) {
+fun LandmarkLayer(myLocation: Location, size: Dp = 30.dp) {
     for (location in landmarkList) {
         crowdIcon(
             pos = listOf(location.first() - myLocation.first(),
             location.last() - myLocation.last()),
             imageVector = Icons.Filled.Add,
-            size = 30.dp,
+            size = size,
             backgroundColor = Color.White.copy(alpha = 0.3f))
     }
 }
@@ -172,15 +175,16 @@ fun DensityLayer(mainViewModel: MainViewModel) {
                 }
             }
     ) {
-        centreIcon()
-        LandmarkLayer(myLocation = mainViewModel.location.value ?: defaultLocation)
+        centreIcon(size = 50.dp * min(1f, max(0.6f, 1f / sqrt(scale))))
+        LandmarkLayer(myLocation = mainViewModel.location.value ?: defaultLocation, size = 30.dp * min(1f, max(0.6f, 1f / sqrt(scale))))
 
         val myLocation = mainViewModel.location.value ?: defaultLocation
         // make locationList not nullable
         val locationList = mainViewModel.locationList.value ?: listOf(defaultLocation)
 
         for (p in locationList) {
-            crowdIcon(pos = listOf(p.first() - myLocation.first(), p.last() - myLocation.last()))
+//            if ((p.first() * 10000).toInt() % (locationList.size / 300 + 1) == 0)
+            crowdIcon(pos = listOf(p.last() - myLocation.first(), p.first() - myLocation.last()), size = 50.dp * min(1f, max(0.6f, 1f / sqrt(scale))))
         }
     }
 }

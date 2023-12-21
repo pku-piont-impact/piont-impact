@@ -53,6 +53,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.withContext
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 public data class LocationData(
     val latitude: Double,
@@ -153,9 +155,18 @@ data class RandomNumberPairsResponse(
     val randomNumberPairs: List<List<Double>>
 )
 
+public data class LocationRequest(
+    val longitude: Double,
+    val latitude: Double
+)
+
 public interface LambdaService {
     @GET("/default/myFunctionName")
     suspend fun getRandomNumberPairs(): RandomNumberPairsResponse
+
+    // POST method for sending location
+    @POST("/default/myFunctionName")
+    suspend fun postLocation(@Body location: LocationRequest)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
