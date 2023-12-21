@@ -61,6 +61,11 @@ import androidx.lifecycle.LiveData
 
 import androidx.compose.ui.geometry.Offset
 
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sqrt
+
+
 typealias Location = List<Double>
 val defaultLocation: Location = listOf(39.9869, 116.3059)
 
@@ -180,7 +185,7 @@ fun DensityLayer(mainViewModel: MainViewModel) {
         val locationList = mainViewModel.locationList.value ?: listOf(defaultLocation)
 
         for (p in locationList) {
-            crowdIcon(pos = listOf(p.first() - myLocation.first(), p.last() - myLocation.last()))
+            crowdIcon(pos = listOf(p.last() - myLocation.first(), p.first() - myLocation.last()))
         }
     }
 }

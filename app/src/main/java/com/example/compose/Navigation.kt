@@ -113,13 +113,26 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
             // 创建一个LambdaService对象，用于调用亚马逊的API接口
             val service = retrofit.create(LambdaService::class.java)
             if (true) {
+
+                try {
+                                        var long: Double = 0.0
+                                        var lat: Double = 0.0
+                                        withContext(Dispatchers.Main) {
+                                                long = location.value!![1]
+                                                lat = location.value!![0]
+                                            }
+                                        service.postLocation(LocationRequest(long, lat))
+                                    } catch (e: Exception) {
+                                        Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + e.toString())
+                                    }
+
                 //use retrofit to get random number pairs from server
                 try {
                     val randomNumberPairs = service.getRandomNumberPairs()
                     Log.w("WarningTag", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!. " + randomNumberPairs.randomNumberPairs.toString())
                     withContext(Dispatchers.Main) {
                         // Update UI with the fetched data
-                        locationList.postValue(randomNumberPairs.randomNumberPairs)
+                        locationList.value = randomNumberPairs.randomNumberPairs
                     }
                 } catch (e: Exception) {
                     locationList.postValue(listOf(listOf(Random.nextDouble(39.985861, 39.997237), Random.nextDouble(116.306257, 116.315872))))
@@ -131,7 +144,7 @@ public class MainViewModel(private val locationData: LocationData): ViewModel() 
 
     init {
         // change location to lontitude and latitude provided in locationData
-        location.postValue(listOf(locationData.latitude, locationData.longitude))
+        location.value = listOf(locationData.latitude, locationData.longitude)
         fetchList()
     }
 }
