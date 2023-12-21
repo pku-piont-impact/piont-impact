@@ -58,7 +58,6 @@ public class LoginActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, PersonalView.class);
                     startActivity(intent);
-
  */
                 }
                 /*
@@ -71,7 +70,6 @@ public class LoginActivity extends Activity {
                         hand1.sendEmptyMessage(msg);
                     }
                 }.start();
-
                  */
             }
         });
