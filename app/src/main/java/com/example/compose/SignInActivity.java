@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import android.app.Activity;
 
-import com.example.compose.dao.UserDao;
 import com.example.compose.entity.User;
 public class SignInActivity extends Activity {
     private static final String TAG = "mysql-test-register";
@@ -54,35 +53,6 @@ public class SignInActivity extends Activity {
                     Toast.makeText(SignInActivity.this,"两次输入的密码不一样",Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    /*
-                    User user = new User();
-
-                    user.setUserPassword(password);
-                    user.setUserName(userName);
-                    user.setUserType(1);
-                    user.setUserState(0);
-                    user.setUserDel(0);
-
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            int msg = 0;
-                            UserDao userDao = new UserDao();
-
-                            User uu = userDao.findUser(user.getUserName());
-                            if (uu != null) {
-                                msg = 1;
-                            }
-                            else {
-                                boolean flag = userDao.SignIn(user);
-                                if (flag) {
-                                    msg = 2;
-                                }
-                            }
-                            hand.sendEmptyMessage(msg);
-                        }
-                    }.start();
-                     */
                     Toast.makeText(SignInActivity.this,"注册成功！",Toast.LENGTH_LONG).show();
                     //跳转回主界面
                     Intent intent = new Intent(SignInActivity.this,MainActivity.class);
@@ -99,11 +69,7 @@ public class SignInActivity extends Activity {
             }
         });
     }
-    /*
-    public void SignIn(View view){
-    }
 
-     */
     @SuppressLint("HandlerLeak")
     final Handler hand = new Handler()
     {

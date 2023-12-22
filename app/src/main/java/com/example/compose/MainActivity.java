@@ -39,10 +39,5 @@ public class MainActivity extends Activity {
             }
         });
     }
-    /*
-    public void reg(View view){
-        startActivity(new Intent(getApplicationContext(),SignInActivity.class));
-    }
-    */
 }
 

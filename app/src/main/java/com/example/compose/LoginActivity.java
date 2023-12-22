@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import android.app.Activity;
 
-import com.example.compose.dao.UserDao;
-
 public class LoginActivity extends Activity {
 
     private Button BtnLogin;
@@ -48,19 +46,6 @@ public class LoginActivity extends Activity {
                     Intent intent = new Intent(LoginActivity.this, PersonalView.class);
                     startActivity(intent);
                 }
-
-                /*
-                new Thread(){
-                    @Override
-                    public void run() {
-                        UserDao userDao = new UserDao();
-
-                        int msg = userDao.login(userName,password);
-                        hand1.sendEmptyMessage(msg);
-                    }
-                }.start();
-
-                 */
             }
         });
 
